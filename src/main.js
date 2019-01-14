@@ -3,10 +3,9 @@ import './cube-ui'
 import App from './App.vue'
 import '&common/index.styl'
 import '&common/border.styl'
+import './register'
 
 Vue.config.productionTip = false
-
-Vue.prototype.bus = new Vue()
 
 new Vue({
   render: h => h(App)

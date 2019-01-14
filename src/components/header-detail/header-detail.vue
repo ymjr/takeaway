@@ -1,7 +1,7 @@
 <template>
   <fade-animation>
     <div class="detail" v-show="detailShow">
-      <div class="detail-wrapper clearfix">
+      <div class="detail-wrapper">
         <div class="detail-main">
           <h1 class="name">{{seller.name}}</h1>
           <div class="star-wrapper">
@@ -52,13 +52,10 @@
         detailShow: false
       }
     },
-    mounted () {
-      var _this = this
-      this.bus.$on('change', function(msg) {
-        _this.detailShow = msg
-      })
-    },
     methods: {
+      show() {
+        this.detailShow = !this.detailShow
+      },
       detailShowClick() {
         this.detailShow = !this.detailShow
       }

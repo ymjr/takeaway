@@ -1,5 +1,5 @@
 <template>
-<div class="header">
+<div class="header" @click="ShowDetail">
   <div class="content-wrapper">
     <div class="avatar">
       <img :src="seller.avatar" width="64" height="64">
@@ -17,7 +17,7 @@
           <span class="text">{{seller.supports[0].description}}</span>
       </div>
     </div>
-    <div class="support-count" v-if="seller.supports" @click="detailShowClick">
+    <div class="support-count" v-if="seller.supports">
       <span class="count">{{seller.supports.length}}个</span>
       <i class="icon-keyboard_arrow_right"></i>
     </div>
@@ -42,17 +42,17 @@
         type: Object
       }
     },
-    data() {
-      return {
-        msgcontent: true
-      }
-    },
     components: {
       SupportIcon
     },
     methods: {
-      detailShowClick() {
-        this.bus.$emit('change', this.msgcontent)
+      ShowDetail() {
+        this.headerDetailComp = this.headerDetailComp || this.$createHeaderDetail({
+          $props: {
+            seller: this.seller
+          }
+        })
+        this.headerDetailComp.show()
       }
     }
   }
