@@ -33,7 +33,7 @@
 </template>
 
 <script>
-  import SupportIcon from '../support-ico/support-ico'
+  import SupportIcon from '../assembly/support-ico/support-ico'
 
   export default {
     name: 'v-header',
