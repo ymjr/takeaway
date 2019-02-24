@@ -1,7 +1,7 @@
 <template>
     <div>
       <div class="shopcart">
-        <div class="content">
+        <div class="content" @click="toggleList">
           <div class="content-left">
             <div class="logo-wrapper">
               <div class="logo" :class="showClass">
@@ -43,9 +43,6 @@
         default: 0
       }
     },
-    components: {
-      Bubble
-    },
     computed: {
       totaPrice () {//价钱总和
         let total = 0
@@ -83,6 +80,42 @@
           return 'highlight'
         }
       }
+    },
+    created() {
+      this.listFold = false
+    },
+    methods: {
+      toggleList() {
+        if (this.listFold === false) {
+          if (!this.totalCount) {
+            return
+          }
+          this.listFold = true
+          this._showShopCartList()
+        } else {
+          this.listFold = false
+          this._hideShoCartList()
+        }
+      },
+      _showShopCartList() {
+        this.shopCartListComp = this.shopCartListComp || this.$createShopCartList({
+          $props: {
+            selectFoods: 'selectFoods'
+          },
+          $events: {
+            hide: () => {
+              this.listFold = false
+            }
+          }
+        })
+        this.shopCartListComp.show()
+      },
+      _hideShoCartList() {
+        this.shopCartListComp.hide()
+      }
+    },
+    components: {
+      Bubble
     }
   }
 </script>
