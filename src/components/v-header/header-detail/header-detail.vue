@@ -1,6 +1,6 @@
 <template>
   <fade-animation>
-    <div class="detail" v-show="detailShow">
+    <div class="detail" v-show="visible">
       <div class="detail-wrapper">
         <div class="detail-main">
           <h1 class="name">{{seller.name}}</h1>
@@ -28,7 +28,7 @@
           </div>
         </div>
       </div>
-      <div class="detail-close" @click="detailShowClick">
+      <div class="detail-close" @click="hide">
         <i class="icon-close"></i>
       </div>
     </div>
@@ -39,25 +39,14 @@
   import SupportIcon from '&assembly/support-ico/support-ico'
   import star from '&assembly/star/star'
   import FadeAnimation from '&assembly/fade/FadeAnimation'
+  import popupMixin from 'common/mixins/mixins.js'
 
   export default {
+    mixins: [popupMixin],
     name: 'header-detail',
     props: {
       seller: {
         type: Object
-      }
-    },
-    data() {
-      return {
-        detailShow: false
-      }
-    },
-    methods: {
-      show() {
-        this.detailShow = !this.detailShow
-      },
-      detailShowClick() {
-        this.detailShow = !this.detailShow
       }
     },
     components: {

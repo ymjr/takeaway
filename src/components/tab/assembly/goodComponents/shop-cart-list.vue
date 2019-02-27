@@ -10,11 +10,12 @@
       >
         <transition
           name="move"
+          @after-leave="onLeave"
         >
           <div v-show="visible">
             <div class="list-header">
               <h1 class="title">购物车</h1>
-              <span class="empty">清空</span>
+              <span @click="empty" class="empty">清空</span>
             </div>
             <cube-scroll class="list-content" ref="listContent">
               <ul>
@@ -44,9 +45,11 @@
 <script>
   import CartControl from './cart-control'
   import FadeAnimation from '&assembly/fade/FadeAnimation'
+  import popupMixin from 'common/mixins/mixins.js'
 
-  const EVENT_HIDE = 'hide'
+  const EVENT_LEAVE = 'leave'
   export default {
+    mixins: [popupMixin],
     name: 'shop-cart-list',
     props: {
       selectFoods: {
@@ -56,21 +59,33 @@
         }
       }
     },
-    data() {
-      return {
-        visible: false
-      }
+    created() {
+      this.$on('show', () => {
+        this.$nextTick(() => {
+          this.$refs.listContent.refresh()
+        })
+      })
     },
     methods: {
-      show() {
-        this.visible = true
-      },
-      hide() {
-        this.visible = false
-        this.$emit(EVENT_HIDE)
-      },
       maskClick() {
         this.hide()
+      },
+      onLeave() {
+        this.$emit(EVENT_LEAVE)
+      },
+      empty() {
+        this.$createDialog({
+          type: 'confirm',
+          title: '确认清空购物车吗？',
+          $events: {
+            confirm: () => {
+              this.selectFoods.forEach((food) => {
+                food.count = 0
+              })
+              this.hide()
+            }
+          }
+        }).show()
       }
     },
     components: {
