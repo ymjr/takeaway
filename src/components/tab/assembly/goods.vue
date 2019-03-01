@@ -36,7 +36,7 @@
           :title="good.name"
         >
           <ul style="padding:0 18px; box-sizing: border-box;">
-            <li v-for="food in good.foods" :key="food.name"  :label="label"  class="food-item border-bottom">
+            <li @click="selectFood(food)" v-for="food in good.foods" :key="food.name"  :label="label"  class="food-item border-bottom">
               <div class="icon">
                 <img width="57" height="57" :src="food.icon"/>
               </div>
@@ -62,8 +62,8 @@
     <div class="shop-car-wrapper">
       <shop-cart
         :selectFoods="selectFoods"
-      :deliveryPrice="seller.deliveryPrice"
-      :minPrice="seller.minPrice"
+        :deliveryPrice="seller.deliveryPrice"
+        :minPrice="seller.minPrice"
       ></shop-cart>
     </div>
   </div>
@@ -132,10 +132,16 @@
           scrollOptions: {
             click: false,
             directionLockThreshold: 0
-          }
+          },
+          selectedfood: {}
         }
       },
       methods: {
+        selectFood(food) {
+          this.selectedfood = food
+          this._showFood()
+          this._showShopCartSticky()
+        },
         fetch () {
           if (!this.fetched) {
             this.fetched = true
@@ -143,6 +149,33 @@
               this.goods = goods
             })
           }
+        },
+        _showFood() {
+          this.foodComp = this.foodComp || this.$createFood({
+            $props: {
+              food: 'selectedfood'
+            },
+            $events: {
+              leave: () => {
+                this._hideShopCartList()
+              }
+            }
+          })
+          this.foodComp.show()
+        },
+        _showShopCartSticky() {
+          this.shopCartStickyComp = this.shopCartStickyComp || this.$createShopCartSticky({
+            $props: {
+              selectFoods: 'selectFoods',
+              deliveryPrice: this.seller.deliveryPrice,
+              minPrice: this.seller.minPrice,
+              fold: true
+            }
+          })
+          this.shopCartStickyComp.show()
+        },
+        _hideShopCartList() {
+          this.shopCartStickyComp.hide()
         }
       }
   }
